@@ -3,17 +3,47 @@ import express from 'express';
 
 const app = express();
 
-app.get('/times',(req,res) => {
-    res.json(brasileirao)
+
+const buscarTimesPorNome = (nomeTimes) => {
+    return brasileirao.filter(time =>
+        time.nome.toLowerCase().includes(nomeTimes.toLowerCase())
+    );
+};
+
+app.get('/times', (req, res) => {
+    const nomeTimes = req.query.busca;
+    const resultado = nomeTimes ? buscarTimesPorNome(nomeTimes) : brasileirao;
+
+    if (resultado.length > 0) {
+        res.json(resultado);
+    } else {
+        res.status(404).json({ "erro": "Nenhum time encontrado" });
+    }
 });
 
-app.get('/times/idTimes',(req,res) => {
+
+app.get('/times/:idTimes', (req, res) => {
     const idTimes = parseInt(req.params.idTimes);
-    const times = brasileirao.find(u => u.id == idTimes);
-    res.json(times);
+    let mensagemErro = '';
+    let time;
+
+    if (!isNaN(idTimes)) {
+        time = brasileirao.find(t => t.id === idTimes);
+        if (!time) {
+            mensagemErro = 'Time não encontrado';
+        }
+    } else {
+        mensagemErro = 'Requisição inválida';
+    }
+
+    if (time) {
+        res.json(time);
+    } else {
+        res.status(404).json({ "erro": mensagemErro });
+    }
 });
 
-app.listen(5050,() =>{
+app.listen(5050, () => {
     let data = new Date();
-    console.log('Servidor iniciado na porta 8080 em:' +data)
-});  
+    console.log('Servidor iniciado na porta 5050 em: ' + data);
+});
