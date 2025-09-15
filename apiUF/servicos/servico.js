@@ -1,26 +1,15 @@
 import colecaoUF from "../dados/dados.js"; 
 
-export const buscarUfs = () => {
-    return colecaoUF;
-};
+export const buscarUfs = () => colecaoUF;
 
-export const buscarUfsPorNome = (nomeUF) => {
-    return colecaoUF.filter(uf => 
-        uf.nome.toLowerCase().includes(nomeUF.toLowerCase())
-    );
-};
+export const buscarUfsPorNome = nomeUF => 
+    colecaoUF.filter(uf => uf.nome.toLowerCase() === nomeUF.toLowerCase());
 
-export const buscarUfsPorId = (id) => {
-    const idUF = parseInt(id);
-    return colecaoUF.find(uf => uf.id === idUF);
-};
+export const buscarUfsPorId = idUF => 
+    colecaoUF.find(uf => uf.id === parseInt(idUF));
 
+export const buscarUfPorSigla = siglaUF => 
+    colecaoUF.find(uf => uf.sigla.toLowerCase() === siglaUF.toLowerCase());
 
-export const buscarUfPorSigla = (sigla) => {
-    return colecaoUf.find(uf => uf.uf.toLowerCase() === sigla.toLowerCase());
-};
-
-
-export const buscarUfsPorInicial = (letra)=> {
-    return colecaoUF.find(uf => uf.uf.toLowerCase().startsWith(letra.toLowerCase()));
-};
+export const buscarUfsPorInicial = inicialUF => 
+    colecaoUF.filter(uf => uf.inicial.toLowerCase() === inicialUF.toLowerCase());

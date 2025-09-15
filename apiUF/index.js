@@ -1,7 +1,8 @@
 import express from 'express';
-import { buscarUfs, buscarUfsPorNome, buscarUfsPorId, buscarUfPorSigla, buscarUfsPorInicial } from "./servicos/servico.js";
+import {buscarUfs, buscarUfsPorNome, buscarUfsPorId, buscarUfPorSigla, buscarUfsPorInicial } from "./servicos/servico.js";
 
 const app = express();
+
 
 app.get('/ufs', (req, res) => {
     const nomeUF = req.query.busca;
@@ -14,22 +15,27 @@ app.get('/ufs', (req, res) => {
     }
 });
 
-app.get('/ufs/:idUF', (req, res) => {
+
+app.get('/ufs/id/:idUF', (req, res) => {
     const idUF = req.params.idUF;
+    
+    if (isNaN(parseInt(idUF))) {
+        return res.status(400).json({ erro: "Requisição inválida" });
+    }
+
     const uf = buscarUfsPorId(idUF);
 
     if (uf) {
         res.json(uf);
-    } else if (isNaN(parseInt(idUF))) {
-        res.status(400).send({ erro: "Requisição inválida" });
     } else {
-        res.status(404).send({ erro: "UF não encontrada" });
+        res.status(404).json({ erro: "UF não encontrada" });
     }
 });
 
+
 app.get('/ufs/sigla/:sigla', (req, res) => {
-    const sigla = req.params.sigla;
-    const uf = buscarUfPorSigla(sigla);
+    const siglaUF = req.params.sigla;
+    const uf = buscarUfPorSigla(siglaUF);
     
     if (uf) {
         res.json(uf);
@@ -38,13 +44,11 @@ app.get('/ufs/sigla/:sigla', (req, res) => {
     }
 });
 
-app.get('/ufs/:valor', (req, res) => {
-    const valor = req.params.valor;
-    let resultado = [];
 
-    if (valor.length === 1) {
-         resultado = buscarUfsPorInicial(valor);
-    }
+app.get('/ufs/inicial/:letra', (req, res) => {
+    const letra = req.params.letra;
+    const resultado = buscarUfsPorInicial(letra);
+
     if (resultado.length > 0) {
         res.json(resultado);
     } else {
@@ -52,7 +56,8 @@ app.get('/ufs/:valor', (req, res) => {
     }
 });
 
+
 app.listen(8080, () => {
     const data = new Date().toLocaleString("pt-BR");
-    console.log(` Servidor iniciado na porta 8080 em: ${data}`);
+    console.log(`Servidor iniciado na porta 8080 em: ${data}`);
 });
