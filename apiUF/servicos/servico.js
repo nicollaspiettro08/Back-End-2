@@ -13,4 +13,3 @@ export const buscarUfPorSigla = siglaUF =>
 
 export const buscarUfsPorInicial = inicialUF => 
     colecaoUF.filter(uf => uf.inicial.toLowerCase() === inicialUF.toLowerCase());
-//
