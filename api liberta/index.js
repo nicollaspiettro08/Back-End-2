@@ -7,19 +7,19 @@ app.get('/campeonatos', async (req, res) => {
     let campeonatos;
 
     const ano = req.query.ano;
-
     const time = req.query.time;
+
+    const anoInvalido = typeof ano  === "undefined" || ano === "";
+    const timeInvalido = typeof time === "undefined" || time === "";
     
-    if (typeof ano === 'undefined' && typeof time === 'undefined') {
+    if (anoInvalido && typeof timeInvalido) {
         campeonatos = await retornaCampeonatos();
     }
-    else if (typeof ano !== 'undefined') {
-        campeonatos = await retornaCampeonatosAno(ano);
-        
+    else if (anoInvalido) {
+        campeonatos = await retornaCampeonatosAno(ano); 
     }
-    else if (typeof time !== 'undefined') {
+    else if (timeInvalido) {
         campeonatos = await retornaCampeonatosTime(time);
-        
     }
 
     if (campeonatos.length > 0) {
